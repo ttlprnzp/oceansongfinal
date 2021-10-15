@@ -1,0 +1,835 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Sing me the Ocean Song</title>
+    <meta charset="utf-8" />
+</head>
+
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      background-color: #ffffff;
+      font-family: monospace;
+      font-size: 12px;
+      text-shadow: 1px 1px #ffffff;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      border: 0;
+      background-attachment:fixed;
+      overflow: hidden; 
+      display: block; 
+      z-index: -2;
+    }
+
+    #info {
+        width:100%;
+        position:fixed;
+        text-align:left;
+        margin: 0;
+    }
+
+    h1 {
+        font-size: 4rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        padding: 1rem;
+        margin: auto;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        width:30%;
+        font-size: 1.5rem;
+        z-index: 1;
+        margin: 1%;
+    }
+
+    #test {
+        height: 50vh;
+        position:fixed;
+        width:100%;
+        vertical-align: middle;
+        margin: 16vh auto;
+        text-align:center;
+    }
+
+    .qcontainer{
+        position: relative;
+        align-items:stretch;
+        width: 50%;
+        height: 12vh;
+        margin: auto;
+    }
+    
+    .slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        margin: auto; 
+        height: 15px;
+        outline: none;
+        background: #eeeeee;
+        opacity: 0.6; 
+        -webkit-transition: .2s; 
+        transition: opacity .2s;
+    }
+
+    .slider:hover {
+        opacity: 0.8; 
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none; 
+        appearance: none;
+        width: 20px; 
+        height: 15px; 
+        background: #000000;
+        cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 20px; 
+        height: 15px;
+        background: #000000; 
+        cursor: pointer; 
+    }
+
+    .sliderticks {
+        display: flex;
+        justify-content:space-between;
+        padding: 0 10px;
+        font-size:16px
+    }
+
+    .sliderticks p {
+        position: relative;
+        display: flex;
+        white-space: nowrap;
+        justify-content: center;
+        overflow:visible;
+        width: 2px;
+        background: #000000;
+        height: 10px;
+        line-height: 50px;
+        margin: 0 0 20px 0;
+        font-size:1em;
+    }
+    
+    .tab {
+      display: none;
+    }
+    
+    button {
+      background-color: #000000;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.5rem;
+      z-index: 2;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      opacity: 0.8;
+    }
+    
+    .step {
+      height: 15px;
+      width: 15px;
+      background-color: #000000;
+      border: none;  
+      border-radius: 50%;
+      display: inline-block;
+      text-align: center;
+      opacity: 0.5;
+    }
+    
+    .step.active {
+      opacity: 1;
+    }
+    
+</style>
+
+<body>
+    <canvas id='myCanvas' style='position:fixed; left:0px; top:0px;'></canvas>
+
+    <div id="wrapper">
+
+        <div id="info">
+            <h3>Andreas Sommer</h3>
+            <h1>OCEAN SONG</h1>
+          
+            <div class="tab">
+                <p>Have you ever wondered what your personality sounds like? How your self and being transcend into the sonic realm? With the help of state-of-the-art psychological methods and innovations in artistic research this website allows you to listen in on yourself and compose your very own Ocean Song.
+                </br>
+                </br> 
+                On the following pages you will be presented with 20 statements about yourself that you are kindly asked to answer to the best of your experience and self-knowledge. Please answer the questions according to how you faithfully think you are, not how you would like to be! When proceeding to the next page, you will be asked to grant permission to use your microphone, to also incorporate aspects of your current sonic existence into the analysis.
+                </p>
+            </div>
+        </div>
+        
+            <div id="test">
+
+                <div class="tab">
+                    <div class="qcontainer">
+    <!-- Question 1 -->
+                        <h2>I am the life of the party.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="extra" name="q1" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                    
+                    <div class="qcontainer">
+    <!-- Question 2 -->
+                        <h2>I sympathize with others' feelings.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="agree" name="q2" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 3 -->
+                        <h2>I get chores done right away.</h2>
+                    
+                        <input type="range" min="1" max="5" value="3" class="slider" id="consc" name="q3" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 4 -->
+                        <h2>I have frequent mood swings.</h2>
+                        
+                        <input type="range" min="1" max="5" value="3" class="slider" id="neuro" name="q4" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 5 -->
+                        <h2>I have a vivid imagination.</h2>
+                    
+                        <input type="range" min="1" max="5" value="3" class="slider" id="open" name="q5" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                </div>
+            
+
+                <div class="tab">
+                    
+                    <div class="qcontainer">
+    <!-- Question 6 -->
+                        <h2>I don't talk a lot.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="extra" name="q6" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                    
+                    <div class="qcontainer">
+    <!-- Question 7 -->
+                        <h2>I am not interested in other people's problems.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="agree" name="q7" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 8 -->
+                        <h2>I often forget to put things back in their proper place.</h2>
+                    
+                        <input type="range" min="1" max="5" value="3" class="slider" id="consc" name="q8" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 9 -->
+                        <h2>I am relaxed most of the time.</h2>
+                        
+                        <input type="range" min="1" max="5" value="3" class="slider" id="neuro" name="q9" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 10 -->
+                        <h2>I am not interested in abstract ideas.</h2>
+                        
+                        <input type="range" min="1" max="5" value="3" class="slider" id="open" name="q10" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="tab">
+                    
+                    <div class="qcontainer">
+    <!-- Question 11 -->
+                        <h2>I talk to a lot of different people at parties.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="extra" name="q11" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                    
+                    <div class="qcontainer">
+    <!-- Question 12 -->
+                        <h2>I feel others' emotions.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="agree" name="q12" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 13 -->
+                        <h2>I like order.</h2>
+                    
+                        <input type="range" min="1" max="5" value="3" class="slider" id="consc" name="q13" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 14 -->
+                        <h2>I get upset easily.</h2>
+                        
+                        <input type="range" min="1" max="5" value="3" class="slider" id="neuro" name="q14" placeholder="0">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 15 -->
+                        <h2>I have difficulty understanding abstract ideas.</h2>
+                    
+                        <input type="range" min="1" max="5" value="3" class="slider" id="open" name="q15" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="tab">
+                    
+                    <div class="qcontainer">
+    <!-- Question 16 -->
+                        <h2>I keep in the background.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="extra" name="q16" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                    
+                    <div class="qcontainer">
+    <!-- Question 17 -->
+                        <h2>I am not really interested in others.</h2>
+
+                        <input type="range" min="1" max="5" value="3" class="slider" id="agree" name="q17" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 18 -->
+                        <h2>I make a mess of things.</h2>
+                    
+                        <input type="range" min="1" max="5" value="3" class="slider" id="consc" name="q18" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 19 -->
+                        <h2>I seldom feel blue.</h2>
+                        
+                        <input type="range" min="1" max="5" value="3" class="slider" id="neuro" name="q19" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+
+                    <div class="qcontainer">
+    <!-- Question 20 -->
+                        <h2>I do not have a good imagination.</h2>
+                    
+                        <input type="range" min="1" max="5" value="3" class="slider" id="open" name="q20" placeholder="1">
+                            <div class="sliderticks">
+                                <p>Very Inaccurate</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <p>Very Accurate</p>
+                            </div>
+                    </div>
+                </div>                                    
+        </div>                
+
+        <div id="info">
+            <h3>Andreas Sommer</h3>
+            <h1>OCEAN SONG</h1>
+            <div class="tab">
+                <p>Your data has successfully been processed and evaluated. 
+                </br>Once you hit submit, your individually composed Ocean Song will play for you for three minutes.</p>
+            </div>
+        </div>
+
+        <div style="position:fixed; bottom:1%; width:100%;text-align:center">
+            <div style="position:fixed; bottom:5%; left: 80%">
+                    <button type="button" id="start" onclick="startThings(1)">Start</button>
+                    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                    <button type="button" id="submit">Submit</button>
+                    <button type="button" id="reset" onclick="location.reload()">Reset</button>
+            </div>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+        </div>
+    </div>
+</body>
+
+<script type="module" src="Tone.js"></script>
+
+
+<script>
+    let currentTab = 0;
+    let qValues = [new Array(5), new Array(5), new Array(5), new Array(5)] 
+    
+    const pages = document.getElementsByClassName("tab")
+
+    showTab(currentTab); 
+    
+    async function startThings(n) {
+        pages[n].style.display = "block";
+        await Tone.start();
+            console.log("läuft")
+            let mic = new Tone.UserMedia();
+            mic.open()
+        pages[currentTab].style.display = "none";
+        currentTab = currentTab + n;
+        showTab(currentTab);
+    }
+
+    function showTab(n) {
+        pages[n].style.display = "block";
+        if (n == 0) {
+            document.getElementById("start").style.display = "inline";
+            document.getElementById("nextBtn").style.display = "none";
+            document.getElementById("submit").style.display = "none";
+            document.getElementById("reset").style.display = "none";
+        } else {
+            document.getElementById("start").style.display = "none";
+            document.getElementById("nextBtn").style.display = "inline";
+        }
+        if (n == (pages.length-1)) {
+            document.getElementById("submit").style.display = "inline";
+            document.getElementById("nextBtn").style.display = "none";
+        } 
+        fixStepIndicator(n)
+    }
+
+    const idArray = ['open', 'consc', 'extra', 'agree', 'neuro']
+
+    function pushAnswers(n) {
+        let choices = pages[n].getElementsByTagName('input');
+            for(let j = 0; j<idArray.length; j++) {  
+                for (let i=0; i<choices.length; i++) {
+                    if (choices[i].id == idArray[j]){
+                        if (choices[i].placeholder == 1) {
+                                qValues[n-1][j] = 6-parseInt(choices[i].value)
+                            } else {                                
+                                qValues[n-1][j] = parseInt(choices[i].value)
+                        }
+                    }    
+                }
+            }   
+            console.log(qValues[currentTab-1]);
+            shape(qValues[currentTab-1], radius/5, 1, angle, 2);
+    }
+
+    function nextPrev(n) {            
+        pushAnswers(currentTab);
+        pages[currentTab].style.display = "none";
+        currentTab = currentTab + n;
+        showTab(currentTab);
+        if (currentTab == 5) {
+            tabulateAnswers()
+        } 
+    }
+    
+  
+    function fixStepIndicator(n) {
+        let i, steps = document.getElementsByClassName("step");
+        for (i = 0; i < steps.length; i++) {
+        steps[i].className = steps[i].className.replace("active", "");
+        } 
+        steps[n].className += " active";
+    }
+    
+    const allscores = [0,0,0,0,0]
+    let scoresum = 0
+    let scoreavg = 0
+    
+    function tabulateAnswers() {
+        let choices = document.getElementsByTagName("input");
+            for(let j = 0; j<idArray.length; j++) {  
+                for (let i=0; i<choices.length; i++) {
+                    if (choices[i].id == idArray[j]){
+                        if (choices[i].placeholder == 1) {
+                                allscores[j] = allscores[j] + 6-parseInt(choices[i].value)
+                            } else {                                
+                                allscores[j] = allscores[j] + parseInt(choices[i].value)
+                        }
+                    }    
+                }
+            }   
+            for (let i = 0; i < allscores.length; i++) {
+                scoresum += allscores[i]
+            }
+            scoreavg = scoresum/5
+            return allscores; scoresum; scoreavg
+    }
+</script>
+
+<script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let angle = 2*Math.PI/5;
+    let radius = 0
+    let move = angle
+
+    function initialize() {
+        window.addEventListener('resize', resizeCanvas, false);
+        resizeCanvas();
+    }
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let x = ctx.canvas.width/2;
+        let y = ctx.canvas.height/2;
+        ctx.translate(x, y);
+        if (canvas.width <= canvas.height){
+            radius = 0.45*canvas.width
+        } else {
+            radius = 0.45*canvas.height
+        }
+        console.log(radius)
+        
+        if (currentTab <= 5) {
+            setBackground();
+            if (currentTab >= 2) {
+                for (i=1; i<=currentTab; i++) {
+                    shape(qValues[i-1], radius/5, 1, angle, 2);
+                }
+            }
+        }
+    }
+    resizeCanvas();
+    initialize()
+
+    let size = radius/5
+
+    function background(radius, alpha, angle, fade) {
+        ctx.fillStyle = 'rgba(255, 255, 255, '+fade+')';
+        ctx.fillRect(-ctx.canvas.width/2,-ctx.canvas.height/2, ctx.canvas.width, ctx.canvas.height);
+        ctx.beginPath();
+        ctx.moveTo(radius, 0)
+        for (let i=0; i<=5; i++) {
+        ctx.lineTo(radius*Math.cos(i*angle), radius*Math.sin(i*angle));
+        //ctx.closePath();
+        ctx.strokeStyle = 'rgba(0, 0, 0, '+alpha+')'
+        ctx.stroke();
+        }
+    }
+    
+    function grid(radius, alpha, angle) {
+        ctx.beginPath();
+        for (let i=0; i<=5; i++) {
+        ctx.lineTo(radius*Math.cos(i*angle), radius*Math.sin(i*angle));
+        ctx.moveTo(0,0);
+        ctx.strokeStyle = 'rgba(0, 0, 0, '+alpha+')'
+        ctx.stroke();
+        }
+    }
+    
+    function shape(values,size,alpha,angle,thick) {
+        ctx.beginPath();
+        ctx.lineWidth = thick;
+        for (let i=0; i<  values.length; i++) {
+            ctx.lineTo(values[i]*size*Math.cos(i*angle),values[i]*size*Math.sin(i*angle));
+        }   
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(0, 0, 0, '+alpha+')'
+        ctx.stroke();
+    }
+    
+    function setBackground() {
+        let factor = [1, 0.8, 0.6, 0.4, 0.2];
+        for (let i=0; i<=factor.length; i++) {
+        background(radius*factor[i], factor[i]/2, angle, 0.01)
+        }
+        grid(radius*2, 0.1, angle)
+    }
+
+    function rotate(speed) {
+        move += speed;
+    }
+        
+    function drawLoop() {
+        background(radius, 0.3, move, (0.2/allscores[4]));
+        for (let i=0; i<qValues.length; i++) {
+            shape(qValues[i], size, 0.7, angle, 1)
+        }
+        ctx.rotate(0.1*allscores[1])
+        rotate(scoresum);
+        radius = radius+(0.02*allscores[0]);
+        size = size-(0.002*allscores[2]);
+        setTimeout(drawLoop,33)
+    }
+</script>
+
+<script type="module">
+    document.getElementById("submit").onclick =
+        async function startLoops() {
+            document.getElementById("submit").style.display = "none";
+            document.getElementById("reset").style.display = "inline";
+
+            const mic = new Tone.UserMedia(0);
+            mic.open()
+            const micEnv = new Tone.AmplitudeEnvelope({
+                attack: 1,
+                decay: 1,
+                sustain: 1.0,
+                release: 2
+            });
+            mic.connect(micEnv);
+      
+            const compout = new Tone.Compressor (-24, 4)
+            const gainout = new Tone.Gain(.9).toDestination();
+            const filterout = new Tone.Filter(30, "highpass");
+            const xfeed = new Tone.Delay(20, 30);
+            const xfeedgain = new Tone.Gain(0.001)
+            
+            const chorus = new Tone.Chorus(20, 20, 5);
+            const pitchdown = new Tone.PitchShift(-1);
+            const shift = new Tone.FrequencyShifter(0.5);
+            const pitchup = new Tone.PitchShift(+1);
+            const autofilt = new Tone.AutoFilter(0.01, 200,1)
+      
+            const effects = [chorus, shift, pitchdown, pitchup, autofilt]
+
+            const lfo2 = new Tone.LFO({
+                    frequency: 0.1*scoreavg, 
+                    min: 0, 
+                    max: 0.005,
+                    phase: 360/scoreavg,
+                    type: "sine"
+                }).start();
+
+            const rev = new Tone.Reverb({
+                decay: 2, 
+                wet: 0.7});
+
+            lfo2.connect(xfeedgain.gain);            
+            
+            filterout.connect(compout);
+            compout.connect(xfeed);
+            xfeed.connect(xfeedgain);
+            compout.connect(rev);
+            rev.connect(gainout);
+                                    
+            function makeLoop(fx, dly, p, scores) {
+                const gain = new Tone.Gain(0.9);
+                const filter = new Tone.Filter(scores*200, "lowpass")
+                const delay = new Tone.Delay(dly,2);
+                const comp = new Tone.Compressor(-24, 4);
+                const pos = new Tone.Panner(p);
+                const lfo = new Tone.LFO({
+                    frequency: 0.005*scores, 
+                    min: -p/2, 
+                    max: p/2,
+                    phase: 360/scores,
+                    type: "sine"
+                }).start();
+                                
+                micEnv.connect(gain);
+                xfeedgain.connect(gain);
+                gain.connect(comp);
+                comp.connect(fx);
+                fx.connect(delay);
+                delay.connect(gain);
+                gain.connect(pos);
+                pos.connect(filterout);
+                lfo.connect(pos.pan);   
+            }
+                        
+            const delayTimes = new Array(5)
+            const positions = new Array(5)
+            
+            function setDelayTimes(scores) {
+                for (let i=0; i<scores.length; i++) {
+                    delayTimes[i] = 0.05*Math.random()*scores[i]
+                }
+            }
+
+            function setPositions(scores) {
+                for (let i=0; i<scores.length; i++) {
+                positions[i] = (scores[i]-12)/10
+                }
+            }
+
+            function setParameters(scores) {
+                setDelayTimes(scores);
+                setPositions(scores);
+
+                chorus.frequency.rampTo(0.1*scores[0])
+                chorus.delayTime = (scores[0])**2;
+                chorus.depth = scores[0]/4;
+                
+                shift.frequency = (12.5-scores[1])**2;
+
+                pitchdown.pitch = -0.05*scores[2];
+
+                pitchup.pitch = scores[3]/2;
+
+                autofilt.baseFrequency = (2000/scores[4]);
+                autofilt.frequency.rampTo(0.01*(scores[4]**3));
+                autofilt.octaves = scores[4]/4;
+            }
+                       
+            setParameters(allscores);
+            
+            //makeLoop(effects[2], delayTimes[2], ((scores[2]-12,5)/10), scores[2])
+            for (let i=0; i<5; i++) {
+                  makeLoop(effects[i], delayTimes[i], positions[i], allscores[4-i])
+            }
+
+            micEnv.triggerAttackRelease(scoreavg);
+            setTimeout(drawLoop,3000);
+                      
+            function stopThings() {
+                gainout.gain.rampTo(0, 10);
+                setTimeout(window.location.reload.bind(window.location), 10000)
+            }
+
+            setTimeout(stopThings,300000)
+        }    
+    </script>
+
+</html>
