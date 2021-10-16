@@ -722,7 +722,8 @@
             const micgain = new Tone.Gain(0.5)
 
             function agc() {
-                if (meter.getValue() < -60) {
+                console.log(meter.getValue())
+                if (meter.getValue() < -40) {
                     micgain.gain.rampTo(micgain.gain.value*2)
                 } 
                 if (meter.getValue() > -30) {
@@ -731,7 +732,7 @@
                 setTimeout(agc,100);
             }
 
-            mic.connect(meter);
+            micgain.connect(meter);
             mic.connect(micgain);
             micgain.connect(micEnv);
       
