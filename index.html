@@ -821,7 +821,8 @@
                     type: "square"
                 }).start();
                                 
-                micEnv.connect(gain);
+                micEnv.connect(filter);
+                filter.connect(gain)
                 xfeedgain.connect(gain);
                 gain.connect(comp);
                 comp.connect(fx);
