@@ -718,7 +718,21 @@
                 sustain: 1.0,
                 release: 2
             });
-            mic.connect(micEnv);
+            
+            const meter = new Tone.Meter()
+            const micgain = new Tone.Gain(0.5)
+
+            function agc() {
+                if (meter.value <= -30) {
+                    micgain.gain.rampTo(0.5+(-30+Math.abs(meter.value)/100))
+                }  
+                agc();
+            }
+
+            mic.connect(meter);
+            mic.connect(micgain);
+            micgain.connect(micEnv);
+
       
             const compout = new Tone.Compressor (-24, 4)
             const gainout = new Tone.Gain(.9).toDestination();
@@ -866,7 +880,7 @@
             for (let i=0; i<allscores.length; i++) {
                   makeLoop(effects[i], delayTimes[i], positions[i], allscores[4-i])
             }
-
+            agc();
             micEnv.triggerAttackRelease(scoreavg/10);
             drawLoop();
                       
