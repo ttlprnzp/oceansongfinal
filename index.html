@@ -557,7 +557,6 @@
                     }    
                 }
             }   
-            console.log(qValues[currentTab-1]);
             shape(qValues[currentTab-1], radius/5, 1, angle, 2);
     }
 
@@ -671,11 +670,11 @@
     function shape(values,size,alpha,angle,thick) {
         ctx.beginPath();
         ctx.lineWidth = thick;
-        for (let i=0; i<  values.length; i++) {
+        for (let i=0; i<values.length; i++) {
             ctx.lineTo(values[i]*size*Math.cos(i*angle),values[i]*size*Math.sin(i*angle));
         }   
         ctx.closePath();
-        ctx.strokeStyle = 'rgba(0, 0, 0, '+alpha+')'
+        ctx.strokeStyle = 'rgba(0, 0, 0,'+alpha+')'
         ctx.stroke();
     }
     
@@ -691,7 +690,7 @@
         move += speed;
     }
         
-    function drawLoop() {
+    function drawLoop(module) {
         background(radius, 0.3, move, (0.2/allscores[4]));
         for (let i=0; i<qValues.length; i++) {
             shape(qValues[i], size, 0.7, angle, 1)
@@ -701,6 +700,9 @@
         radius = radius+(0.02*allscores[0]);
         size = size-(0.002*allscores[2]);
         setTimeout(drawLoop,33)
+        if (size < 0) {
+            module.start()
+        }
     }
 </script>
 
@@ -730,23 +732,23 @@
             const pitchdown = new Tone.PitchShift(-1);
             const shift = new Tone.FrequencyShifter(0.5);
             const pitchup = new Tone.PitchShift(+1);
-            const autofilt = new Tone.AutoFilter(0.01, 200,1)
+            const autofilt = new Tone.AutoFilter(0.01,200,1)
       
             const effects = [chorus, shift, pitchdown, pitchup, autofilt]
 
-            const lfo2 = new Tone.LFO({
+            const lfo1 = new Tone.LFO({
                     frequency: 0.1*scoreavg, 
                     min: 0, 
                     max: 0.005,
                     phase: 360/scoreavg,
                     type: "sine"
-                }).start();
+                })
 
             const rev = new Tone.Reverb({
                 decay: 2, 
-                wet: 0.7});
+                wet: 0.8});
 
-            lfo2.connect(xfeedgain.gain);            
+            lfo1.connect(xfeedgain.gain);            
             
             filterout.connect(compout);
             compout.connect(xfeed);
@@ -758,14 +760,31 @@
                 const gain = new Tone.Gain(0.9);
                 const filter = new Tone.Filter(scores*200, "lowpass")
                 const delay = new Tone.Delay(dly,2);
-                const comp = new Tone.Compressor(-24, 4);
+                const comp = new Tone.Compressor({
+                    threshold: -24, 
+                    ratio: 4,
+                    attack: 0.5});
                 const pos = new Tone.Panner(p);
-                const lfo = new Tone.LFO({
+                const lfo2 = new Tone.LFO({
                     frequency: 0.005*scores, 
                     min: -p/2, 
                     max: p/2,
                     phase: 360/scores,
                     type: "sine"
+                }).start();
+                const lfo3 = new Tone.LFO({
+                    frequency: 0.001*scores, 
+                    min: 0.0, 
+                    max: 0.1*scores,
+                    phase: 270/scores,
+                    type: "sine"
+                }).start();
+                const lfo4 = new Tone.LFO({
+                    frequency: 0.1*scores, 
+                    min: dly, 
+                    max: dly*2,
+                    phase: 180/scores,
+                    type: "square"
                 }).start();
                                 
                 micEnv.connect(gain);
@@ -776,7 +795,9 @@
                 delay.connect(gain);
                 gain.connect(pos);
                 pos.connect(filterout);
-                lfo.connect(pos.pan);   
+                lfo2.connect(pos.pan);
+                lfo3.connect(lfo3.frequency);
+                lfo4.connect(delay.delayTime)   
             }
                         
             const delayTimes = new Array(5)
@@ -799,7 +820,7 @@
                 setPositions(scores);
 
                 chorus.frequency.rampTo(0.1*scores[0])
-                chorus.delayTime = (scores[0])**2;
+                chorus.delayTime = scores[0]**2;
                 chorus.depth = scores[0]/4;
                 
                 shift.frequency = (12.5-scores[1])**2;
@@ -808,7 +829,7 @@
 
                 pitchup.pitch = scores[3]/2;
 
-                autofilt.baseFrequency = (2000/scores[4]);
+                autofilt.baseFrequency = 2000/scores[4];
                 autofilt.frequency.rampTo(0.01*(scores[4]**3));
                 autofilt.octaves = scores[4]/4;
             }
@@ -816,12 +837,12 @@
             setParameters(allscores);
             
             //makeLoop(effects[2], delayTimes[2], ((scores[2]-12,5)/10), scores[2])
-            for (let i=0; i<5; i++) {
+            for (let i=0; i<allscores.length; i++) {
                   makeLoop(effects[i], delayTimes[i], positions[i], allscores[4-i])
             }
 
-            micEnv.triggerAttackRelease(scoreavg);
-            setTimeout(drawLoop,3000);
+            micEnv.triggerAttackRelease(scoreavg/10);
+            drawLoop(lfo1);
                       
             function stopThings() {
                 gainout.gain.rampTo(0, 10);
