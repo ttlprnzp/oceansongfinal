@@ -723,10 +723,13 @@
             const micgain = new Tone.Gain(0.5)
 
             function agc() {
-                if (meter.value <= -30) {
-                    micgain.gain.rampTo(0.5+(-30+Math.abs(meter.value)/100))
-                }  
-                agc();
+                if (meter.value < -60) {
+                    micgain.gain.rampTo((Math.abs(meter.value)/100))
+                } else {
+                    micgain.gain.rampTo(0)
+                }
+                console.log(micgain.gain.value)
+                setTimeout(agc,100);
             }
 
             mic.connect(meter);
