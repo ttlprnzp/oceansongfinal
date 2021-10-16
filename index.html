@@ -725,10 +725,10 @@
             function agc() {
                 console.log(meter.getValue())
                 if (meter.getValue() < -60) {
-                    micgain.gain.rampTo(1)
+                    micgain.gain.rampTo(micgain.gain.value*2)
                 } 
                 if (meter.getValue() > -30) {
-                    micgain.gain.rampTo(0.1)
+                    micgain.gain.rampTo(micgain.gain.value*0.01)
                 }
                 console.log(micgain.gain.value)
                 setTimeout(agc,100);
