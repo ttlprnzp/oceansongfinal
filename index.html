@@ -777,14 +777,14 @@
             function makeLoop(fx, dly, p, scores) {
                 const gain = new Tone.Gain(0.9);
                 const filter = new Tone.Filter(scores*200, "lowpass")
-                const delay = new Tone.Delay(dly,2);
+                const delay = new Tone.Delay(dly,10);
                 const comp = new Tone.Compressor({
                     threshold: -24, 
                     ratio: 4,
                     attack: 0.5});
                 const pos = new Tone.Panner(p);
                 const lfo2 = new Tone.LFO({
-                    frequency: 0.05*scores, 
+                    frequency: 0.005*scores, 
                     min: -p, 
                     max: p,
                     phase: 360/scores,
@@ -824,7 +824,7 @@
             
             function setDelayTimes(scores) {
                 for (let i=0; i<scores.length; i++) {
-                    delayTimes[i] = 0.05*Math.random()*scores[i]
+                    delayTimes[i] = 0.5*Math.random()*scores[i]
                 }
             }
 
