@@ -700,9 +700,7 @@
         radius = radius+(0.02*allscores[0]);
         size = size-(0.002*allscores[2]);
         setTimeout(drawLoop,33)
-        if (size < 0) {
-            module.start()
-        }
+        return size
     }
 </script>
 
@@ -728,21 +726,41 @@
             const xfeed = new Tone.Delay(20, 30);
             const xfeedgain = new Tone.Gain(0.001)
             
-            const chorus = new Tone.Chorus(20, 20, 5);
-            const pitchdown = new Tone.PitchShift(-1);
-            const shift = new Tone.FrequencyShifter(0.5);
-            const pitchup = new Tone.PitchShift(+1);
-            const autofilt = new Tone.AutoFilter(0.01,200,1)
+            const chorus = new Tone.Chorus({
+                delayTime: 20,
+                depth: 5,
+                frequency: 1,
+                spread: 90});
+
+            const pitchdown = new Tone.PitchShift({
+                delayTime: 1,
+                windowsize: 1,
+                pitch: -1});
+
+            const shift = new Tone.FrequencyShifter({
+                frequency: 0.5,
+                wet: 0.5});
+
+            const pitchup = new Tone.PitchShift({
+                delayTime: 1,
+                windowsize: 1,
+                pitch: +1});
+
+            const autofilt = new Tone.AutoFilter({
+                frequency: 0.01,
+                baseFrequency: 200,
+                octaves: 1,
+                depth: 0.5})
       
             const effects = [chorus, shift, pitchdown, pitchup, autofilt]
 
             const lfo1 = new Tone.LFO({
                     frequency: 0.1*scoreavg, 
                     min: 0, 
-                    max: 0.005,
+                    max: 1,
                     phase: 360/scoreavg,
                     type: "sine"
-                })
+                }).start()
 
             const rev = new Tone.Reverb({
                 decay: 2, 
@@ -766,9 +784,9 @@
                     attack: 0.5});
                 const pos = new Tone.Panner(p);
                 const lfo2 = new Tone.LFO({
-                    frequency: 0.005*scores, 
-                    min: -p/2, 
-                    max: p/2,
+                    frequency: 0.05*scores, 
+                    min: -p, 
+                    max: p,
                     phase: 360/scores,
                     type: "sine"
                 }).start();
@@ -802,6 +820,7 @@
                         
             const delayTimes = new Array(5)
             const positions = new Array(5)
+            const LFOs = new Array(5)
             
             function setDelayTimes(scores) {
                 for (let i=0; i<scores.length; i++) {
@@ -822,16 +841,23 @@
                 chorus.frequency.rampTo(0.1*scores[0])
                 chorus.delayTime = scores[0]**2;
                 chorus.depth = scores[0]/4;
+                chorus.spread = 360/scores[0];
                 
                 shift.frequency = (12.5-scores[1])**2;
+                shift.wet.rampTo(1-(1/scores[1]))
 
                 pitchdown.pitch = -0.05*scores[2];
+                pitchdown.delayTime.rampTo(''+scores[2]+'hz')
+                pitchdown.windowsize = scores[2]*0.25
 
                 pitchup.pitch = scores[3]/2;
+                pitchup.delayTime.rampTo(''+scores[3]+'hz')
+                pitchup.windowsize = scores[3]*0.2
 
                 autofilt.baseFrequency = 2000/scores[4];
                 autofilt.frequency.rampTo(0.01*(scores[4]**3));
                 autofilt.octaves = scores[4]/4;
+                autofilt.depth.rampTo(scores[4]/20)
             }
                        
             setParameters(allscores);
@@ -842,7 +868,7 @@
             }
 
             micEnv.triggerAttackRelease(scoreavg/10);
-            drawLoop(lfo1);
+            drawLoop();
                       
             function stopThings() {
                 gainout.gain.rampTo(0, 10);
